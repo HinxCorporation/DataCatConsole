@@ -4,7 +4,7 @@
     |  _ \  __ _| |_ __ _   / ___|__ _| |_          | | | (_)_ __ __  __
     | | | |/ _` | __/ _` | | |   / _` | __|  _____  | |_| | | '_ \ \/ /
     | |_| | (_| | || (_| | | |__| (_| | |_  |_____| |  _  | | | | |>  <
-    |____/ \__,_|\__\__,_|  \____\__,_|\__|         |_| |_|_|_| |_/_/\_\                                           
+    |____/ \__,_|\__\__,_|  \____\__,_|\__|         |_| |_|_|_| |_/_/\_\
     
     Data Console v0.1 (请输入help查看可用命令)
 
@@ -15,7 +15,7 @@
 
 ## Similar project
 
-[File Monitor Link]("https://github.com/HinxCorporation/FileMonitor")
+File Monitor [Link]("https://github.com/HinxCorporation/FileMonitor")
 
 ## Difference
 

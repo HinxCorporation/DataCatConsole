@@ -15,7 +15,7 @@ class ConsoleApp(cmd.Cmd):
     # CLI prompt
     @property
     def prompt(self) -> str:
-        return "FileMonitorCLI>> "
+        return "DataCat CLI>> "
 
     def __init__(self):
         """

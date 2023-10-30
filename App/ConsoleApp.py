@@ -1,11 +1,13 @@
 import argparse as aps
+
 import cmd2 as cmd
 from cmd2 import with_argparser
 from tabulate import tabulate
-import DcConn.msqlutil
-import DcConn
-from PyDataCat import RebuildUtil
 from tqdm import tqdm
+
+import DcConn
+import DcConn.msqlutil
+from PyDataCat import RebuildUtil
 
 
 def create_arg_parser():
@@ -97,7 +99,9 @@ class ConsoleApp(cmd.Cmd):
         :return:
         """
         lst = RebuildUtil.collect_folders()
-        print('\ndir:\t'.join(lst))
+        sheet = [['dir', _dir, RebuildUtil.get_table_name(_dir)] for _dir in lst]
+        headers = ["类型", "路径", "数据库名"]
+        print(tabulate(sheet, headers, tablefmt="fancy_grid"))
 
     @with_argparser(aps.ArgumentParser())
     def do_ls_rules(self, line):

@@ -1,5 +1,7 @@
 import os.path
+
 import tqdm
+
 import Config.config as config
 from DcConn import msqlutil
 from DcConn import sql3util

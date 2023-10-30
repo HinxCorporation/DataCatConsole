@@ -2,7 +2,9 @@ import datetime
 import hashlib
 import os
 import string
+
 from tqdm import tqdm
+
 import DcConn.msqlutil
 from Config import config
 from PyDataCat import querys
@@ -219,6 +221,8 @@ def get_table_name(path):
     full_path = os.path.abspath(path)
     return (full_path
             .replace('/', '__')
+            .replace(' ', '_')
+            .replace('.', '_')
             .replace(':\\', '__')
             .replace('\\', '__'))
 

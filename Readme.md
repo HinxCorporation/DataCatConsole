@@ -10,8 +10,8 @@
 
 ## Descriptions
 
-> A project going to manage large file system , index files and make monitor , basic services for media manage and file manage.
-
+> A project going to manage large file system , index files and make monitor , basic services for media manage and file
+> manage.
 
 ## Similar project
 
@@ -24,7 +24,6 @@ File Monitor [Link]("https://github.com/HinxCorporation/FileMonitor")
 - output to mysql database
 
 ## How to start
-
 
 - init cmds
 
@@ -51,7 +50,6 @@ python main.py
 ```
 
 - console
-
 
 ```cmd2
 DataCat CLI>> help

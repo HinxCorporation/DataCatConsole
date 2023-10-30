@@ -1,5 +1,5 @@
-import Config.config as config
 import mysql.connector
+import Config.config as config
 
 
 def create_conn():

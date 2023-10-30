@@ -10,7 +10,7 @@ from PyDataCat import querys
 save_location = 'outputs'
 
 
-def run():
+def run(recount=True):
     cnx = DcConn.msqlutil.create_conn()
     if not DcConn.msqlutil.check_connection(cnx):
         print("mysql connection fail, can not continue process")
@@ -19,24 +19,30 @@ def run():
         folders = collect_folders()
         print(f'read files {len(folders)} , ready to begin process')
         for folder in folders:
-            rebuild_index_for_folder(folder, cnx)
+            rebuild_index_for_folder(folder, cnx, recount)
     cnx.close()
+    print("All job is done.")
 
 
-def rebuild_index_for_folder(full_path, cnx):
+def rebuild_index_for_folder(full_path, cnx, recount):
     """
     create records to database
     :type cnx:
     :param full_path:
+    :param recount:
     :return:
     """
 
-    tqs = tqdm(unit=' file', desc='Collecting files', total=0, unit_scale=True, unit_divisor=1000)
-    file_count, folder_count = count_files(full_path, tqs)
-    tqs.close()
+    file_count = 0
+    folder_count = 0
+    if recount:
+        tqs = tqdm(unit=' file', desc=f'Collecting files from {full_path}', total=0, unit_scale=True, unit_divisor=1000)
+        file_count, folder_count = count_files(full_path, tqs)
+        tqs.close()
 
     totals = file_count + folder_count
     is_large_collection = file_count > config.get_max_count_of_db_part() * 3
+
     print(f'begin processing {file_count} files and {folder_count} folders, is Large DB ? {is_large_collection}')
 
     if is_large_collection:
@@ -168,7 +174,7 @@ def travel(folder, cnx, crs, insert_query, tqs, counter, limited: int = 1000):
             if counter % limited == 0:
                 cnx.commit()
         else:
-            counter = travel(folder, cnx, crs, insert_query, tqs, counter, limited)
+            counter = travel(entry.path, cnx, crs, insert_query, tqs, counter, limited)
     return counter
 
 
@@ -302,7 +308,7 @@ def collect_folders():
     with open(configFile, 'r', encoding='utf-8') as ffile:
         lines = ffile.readlines()
     folders = []
-    for line in tqdm(iterable=lines, unit='dir', desc='trip'):
+    for line in lines:
         if line.startswith('#'):
             # 注释的内容
             continue

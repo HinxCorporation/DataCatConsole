@@ -1,9 +1,9 @@
 import os.path
-import Config.config as config
-from PyDataCat import querys
 import tqdm
+import Config.config as config
 from DcConn import msqlutil
 from DcConn import sql3util
+from PyDataCat import querys
 
 
 def file_to_table_name(file):

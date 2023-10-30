@@ -298,7 +298,7 @@ def collect_folders():
     from config read folder list to be set up
     :return:
     """
-    configFile = "config/folder_paths.txt"
+    configFile = "Config/folder_paths.txt"
     with open(configFile, 'r', encoding='utf-8') as ffile:
         lines = ffile.readlines()
     folders = []

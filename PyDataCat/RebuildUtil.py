@@ -7,7 +7,10 @@ import DcConn.msqlutil
 from Config import config
 from PyDataCat import querys
 
+# output dirs for db
 save_location = 'outputs'
+# folder to counter
+counted_folder = {}
 
 
 def run(recount=True):
@@ -24,7 +27,7 @@ def run(recount=True):
     print("All job is done.")
 
 
-def rebuild_index_for_folder(full_path, cnx, recount):
+def rebuild_index_for_folder(full_path, cnx, recount=True):
     """
     create records to database
     :type cnx:
@@ -65,6 +68,8 @@ def count_files(folder, tqs):
     :param folder:
     :return:
     """
+    if counted_folder.get(folder) is not None:
+        return counted_folder.get(folder)
     total_files = 0
     total_folders = 1
     for entry in os.scandir(folder):
@@ -75,7 +80,9 @@ def count_files(folder, tqs):
             f, d = count_files(entry.path, tqs)
             total_files += f
             total_folders += d
-    return total_files, total_folders
+    result = total_files, total_folders
+    counted_folder[folder] = result
+    return result
 
 
 def hi_create_db_for_folder_not_travel(full_path, cnx):
@@ -308,14 +315,25 @@ def collect_folders():
     with open(configFile, 'r', encoding='utf-8') as ffile:
         lines = ffile.readlines()
     folders = []
+
+    def test_append(test_dir):
+        _su, _dir = get_abs_folder(test_dir)
+        if _su:
+            folders.append(_dir)
+
     for line in lines:
         if line.startswith('#'):
             # 注释的内容
             continue
-        else:
-            su, j_dir = get_abs_folder(line)
+        elif line.startswith('&'):
+            tmpdir = line[1:]
+            su, j_dir = get_abs_folder(tmpdir)
             if su:
-                folders.append(j_dir)
+                for entry in os.scandir(j_dir):
+                    if entry.is_dir():
+                        test_append(entry.path)
+        else:
+            test_append(line)
     return folders
 
 
@@ -327,6 +345,10 @@ def get_abs_folder(folder_path):
     """
     # 处理相对路径、绝对路径和环境变量
     folder_path = folder_path.strip()
+
+    if folder_path is None or folder_path == '':
+        return False, ''
+
     processed_path = os.path.expandvars(os.path.expanduser(folder_path))
 
     if not os.path.isabs(processed_path):

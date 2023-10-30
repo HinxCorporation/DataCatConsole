@@ -2,7 +2,10 @@ import argparse as aps
 import cmd2 as cmd
 from cmd2 import with_argparser
 from tabulate import tabulate
+import DcConn.msqlutil
+import DcConn
 from PyDataCat import RebuildUtil
+from tqdm import tqdm
 
 
 def create_arg_parser():
@@ -62,6 +65,8 @@ class ConsoleApp(cmd.Cmd):
             except:
                 pass
             commands_with_statements.append([cmdstr, statement])
+        # sort result by cmd name
+        commands_with_statements.sort(key=lambda x: x[0])
         header = ['可用的指令', '描述']
         table = tabulate(commands_with_statements, header, tablefmt="fancy_grid")
         print(table)
@@ -84,3 +89,57 @@ class ConsoleApp(cmd.Cmd):
         ---默认规则为继续递归下级目录创建子数据库
         """
         RebuildUtil.run(self.rebuild_count)
+
+    @with_argparser(aps.ArgumentParser())
+    def do_ls_rebuild(self, line):
+        """
+        列举配置中可以读取文件夹列表 (用于检查列表)
+        :return:
+        """
+        lst = RebuildUtil.collect_folders()
+        print('\ndir:\t'.join(lst))
+
+    @with_argparser(aps.ArgumentParser())
+    def do_ls_rules(self, line):
+        """
+        查阅跳过的文件夹规则
+        :return:
+        """
+        rule_file = 'Config/skip_rules.txt'
+        with open(rule_file, 'r') as file:
+            lines = file.readlines()
+        print('rule=\t'.join(lines))
+
+    @with_argparser(aps.ArgumentParser())
+    def do_test_count(self, line):
+        """
+        尝试列举文件列表并且进行计数
+        :param line:
+        :return:
+        """
+        tqs = tqdm(unit=' file',
+                   desc=f'查找所有文件中 (可能会消耗大量时间,请稍后) ',
+                   total=0, unit_scale=True, unit_divisor=1000)
+        lst = RebuildUtil.collect_folders()
+        result = []
+        for read_dir in lst:
+            s, d = RebuildUtil.count_files(read_dir, tqs)
+            result.append([read_dir, f'{s + d} files'])
+        tqs.close()
+        header = ['位置', '文件总数']
+        table = tabulate(result, header, tablefmt="fancy_grid")
+        print(table)
+
+    @with_argparser(aps.ArgumentParser())
+    def do_test_conn(self, line):
+        """
+        测试mysql是否可以正常链接
+        :param line:
+        :return:
+        """
+        cnx = DcConn.msqlutil.create_conn()
+        if not DcConn.msqlutil.check_connection(cnx):
+            print("MySql 链接失败, 请检查配置")
+            pass
+        else:
+            print("似乎一切都在正常工作(mysql) (*^▽^*)")

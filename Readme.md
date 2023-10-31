@@ -26,7 +26,7 @@
 5. `test_count` 预览文件夹文件计数 (已经计数过的文件夹本次运行将会使用缓存记录 , 配合大文件夹分表功能给大文件夹分为子table)
 6. `folder_paths.txt` 新增feature, 使用&开始的文件夹将会被配置为拆分, 例如 &/dir/large_folder/  子文件夹有foldera,folderb , 则改记录会被拆分为 /dir/large_folder/foldera 和/dir/large_folder/folderb , 其他以此类推
 
-![image-20231030215510957](F:\Root\volume-workbench\Python\DataCatConsole\Readme.assets\image-20231030215510957-1698674715346-1.png)
+![snapshot](https://github.com/HinxCorporation/DataCatConsole/blob/71628c467b24d95f682d26243d2f326c2baf77c2/Readme.assets/image-20231030215510957.png)
 
 
 

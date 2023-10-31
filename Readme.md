@@ -84,3 +84,10 @@ DataCat CLI>> help
 DataCat CLI>>
 ```
 
+
+## TODO
+
+ - [ ] Create a table while db is finished . record its storage id . view id actually.
+ - [ ] View ID divide into 10 level , from level 1 to level 11
+ - [ ] Compare it if it needs to update . 
+

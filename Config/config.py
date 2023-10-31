@@ -37,8 +37,15 @@ def get_separate_db():
 
 
 def get_max_count_of_db_part():
+    """max size of a part of single table"""
     return cfg.getint('Global', 'MaxOfPart')
 
 
+def get_table_prefix():
+    """table name prefix"""
+    return cfg.get('Global', 'DC_AUTO_')
+
+
 def get_batch_size():
+    """batch size"""
     return cfg.getint('Global', 'BatchSize')

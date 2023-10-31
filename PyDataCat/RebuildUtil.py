@@ -5,6 +5,7 @@ import string
 
 from tqdm import tqdm
 
+import Config.config
 import DcConn.msqlutil
 from Config import config
 from PyDataCat import querys
@@ -13,6 +14,8 @@ from PyDataCat import querys
 save_location = 'outputs'
 # folder to counter
 counted_folder = {}
+# table name prefix
+db_prefix = Config.config.get_table_prefix()
 
 
 def run(recount=True):
@@ -219,12 +222,12 @@ def get_table_name(path):
     :return:
     """
     full_path = os.path.abspath(path)
-    return (full_path
-            .replace('/', '__')
-            .replace(' ', '_')
-            .replace('.', '_')
-            .replace(':\\', '__')
-            .replace('\\', '__'))
+    return db_prefix + (full_path
+                        .replace('/', '__')
+                        .replace(' ', '_')
+                        .replace('.', '_')
+                        .replace(':\\', '__')
+                        .replace('\\', '__'))
 
 
 def collect_file_data(filepath):

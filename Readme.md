@@ -13,8 +13,6 @@
 > A project going to manage large file system , index files and make monitor , basic services for media manage and file
 > manage.
 
-
-
 ## History
 
 #### 2023年10月30日21:55:08
@@ -23,12 +21,12 @@
 2. `ls_rebuild` 预览需要重建数据库的文件夹列表,以及其将会存放的数据库
 3. `ls_rules` 预览重建数据库列表越过规则
 4. `test_conn` 链接mysql测试
-5. `test_count` 预览文件夹文件计数 (已经计数过的文件夹本次运行将会使用缓存记录 , 配合大文件夹分表功能给大文件夹分为子table)
-6. `folder_paths.txt` 新增feature, 使用&开始的文件夹将会被配置为拆分, 例如 &/dir/large_folder/  子文件夹有foldera,folderb , 则改记录会被拆分为 /dir/large_folder/foldera 和/dir/large_folder/folderb , 其他以此类推
+5. `test_count` 预览文件夹文件计数 (已经计数过的文件夹本次运行将会使用缓存记录 ,
+   配合大文件夹分表功能给大文件夹分为子table)
+6. `folder_paths.txt` 新增feature, 使用&开始的文件夹将会被配置为拆分, 例如`&/dir/large_folder/`
+   子文件夹有`foldera`,`folderb`, 则改记录会被拆分为 `/dir/large_folder/foldera` 和`/dir/large_folder/folderb` , 其他以此类推
 
 ![snapshot](https://github.com/HinxCorporation/DataCatConsole/blob/71628c467b24d95f682d26243d2f326c2baf77c2/Readme.assets/image-20231030215510957.png)
-
-
 
 ## Similar project
 
@@ -84,10 +82,11 @@ DataCat CLI>> help
 DataCat CLI>>
 ```
 
-
 ## TODO
 
- - [ ] Create a table while db is finished . record its storage id . view id actually.
- - [ ] View ID divide into 10 level , from level 1 to level 11
- - [ ] Compare it if it needs to update . 
+- [ ] Create a table while db is finished . record its storage id . view id actually.
+- [ ] View ID divide into 10 level , from level 1 to level 11
+- [ ] Compare it if it needs to update .
+- [ ] database to hash name
+- [ ] access monitor part to this sys.
 

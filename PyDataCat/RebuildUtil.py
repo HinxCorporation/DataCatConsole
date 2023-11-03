@@ -4,10 +4,12 @@ import os
 import string
 
 from tqdm import tqdm
+from unidecode import unidecode
 
 import Config.config
 import DcConn.msqlutil
 from Config import config
+from PyDataCat import ConfigLo as dConf
 from PyDataCat import querys
 
 # output dirs for db
@@ -16,6 +18,8 @@ save_location = 'outputs'
 counted_folder = {}
 # table name prefix
 db_prefix = Config.config.get_table_prefix()
+# create or read a db config.
+my_config = dConf.ConfigSQLITE('config.db')
 
 
 def run(recount=True):
@@ -101,9 +105,7 @@ def hi_create_db_for_folder_not_travel(full_path, cnx):
     table_name = get_table_name(full_path)
     crs = cnx.cursor()
     tmp_table_name, insert_query, limited = ensure_table(table_name, cnx, crs)
-
     totals = 0
-
     tqs = tqdm(unit='queries', desc=f'Insert rec into db [{table_name}]',
                total=totals, unit_scale=True, unit_divisor=1000)
 
@@ -124,6 +126,11 @@ def hi_create_db_for_folder_not_travel(full_path, cnx):
     crs.close()
 
 
+def connect_table2path(dbname, full_path, desc):
+    """链接两个数值"""
+    my_config.set_value(full_path, dbname, desc)
+
+
 def hi_create_db_for_folder(full_path, cnx, totals):
     """
     insert all data into a db from full path with total count
@@ -136,7 +143,6 @@ def hi_create_db_for_folder(full_path, cnx, totals):
     table_name = get_table_name(full_path)
     crs = cnx.cursor()
     tmp_table_name, insert_query, limited = ensure_table(table_name, cnx, crs)
-
     tqs = tqdm(unit='queries', desc=f'Insert rec into db [{table_name}]',
                total=totals, unit_scale=True, unit_divisor=1000)
 
@@ -222,12 +228,24 @@ def get_table_name(path):
     :return:
     """
     full_path = os.path.abspath(path)
-    return db_prefix + (full_path
-                        .replace('/', '__')
-                        .replace(' ', '_')
-                        .replace('.', '_')
-                        .replace(':\\', '__')
-                        .replace('\\', '__'))
+    sha1 = hashlib.sha1()
+    try:
+        sha1.update(full_path.encode('utf-8'))
+    except:
+        try:
+            sha1.update(full_path.encode('latin-1'))
+        except:
+            plain_str = trim_and_encode_utf8(full_path)
+            sha1.update(plain_str)
+    sha1_str = sha1.hexdigest()
+    connect_table2path(sha1_str, full_path, 'database name with dir path')
+    return db_prefix + sha1_str
+
+
+def trim_and_encode_utf8(input_str):
+    ascii_string = unidecode(input_str)
+    utf8_string = ascii_string.encode('utf-8')
+    return utf8_string
 
 
 def collect_file_data(filepath):

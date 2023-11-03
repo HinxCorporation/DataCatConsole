@@ -43,7 +43,7 @@ def get_max_count_of_db_part():
 
 def get_table_prefix():
     """table name prefix"""
-    return cfg.get('Global', 'DC_AUTO_')
+    return cfg.get('Global', 'Db_Prefix')
 
 
 def get_batch_size():

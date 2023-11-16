@@ -7,6 +7,7 @@ from tqdm import tqdm
 
 import DcConn
 import DcConn.msqlutil
+import DlistWorker
 from PyDataCat import RebuildUtil
 
 
@@ -133,6 +134,17 @@ class ConsoleApp(cmd.Cmd):
         header = ['位置', '文件总数']
         table = tabulate(result, header, tablefmt="fancy_grid")
         print(table)
+
+    @with_argparser(aps.ArgumentParser())
+    def do_test_dlist(self,args):
+        """
+        测试dlist工作者功能
+        :param args:
+        :return:
+        """
+        dlist_folder = 'dlist'
+        woe = DlistWorker.DWorker(dlist_folder)
+        woe.run()
 
     @with_argparser(aps.ArgumentParser())
     def do_test_conn(self, line):
